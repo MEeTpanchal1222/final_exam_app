@@ -28,9 +28,12 @@ class Getfavoriteuser extends CrudEvent {
 }
 
 class addfavoriteuser extends CrudEvent {
-  addfavoriteuser();
+  final String name;
+  final String email;
+  addfavoriteuser(this.name, this.email);
 }
 
 class Deleatefavoriteuser extends CrudEvent {
-  Deleatefavoriteuser();
+  final String id;
+  Deleatefavoriteuser(this.id);
 }

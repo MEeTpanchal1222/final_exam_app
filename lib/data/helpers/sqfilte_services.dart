@@ -56,6 +56,8 @@ class SQLiteService {
 
   Future<List<Map<String, Object?>>> compareuser({required String name,email}) async {
     final db = await database;
-    return await db.query('users', columns: ['name','email'], where: '"name" = ?, "email" = ?', whereArgs:[name,email]);
+    return await
+    //db.query('users', columns: ['name','email'], where: '"name" = ?, "email" = ?', whereArgs:[name,email]);
+    db.query('SELECT name, email FROM users WHERE "name" = ? AND "email" = ?', whereArgs:[name,email]);
   }
 }

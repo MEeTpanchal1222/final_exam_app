@@ -9,7 +9,15 @@ class UserLoaded extends CrudState {
   UserLoaded(this.Users);
 }
 
+class UserError extends CrudState {
+  final String error;
 
+  UserError(this.error);
+}
+class UserAuthenticated extends CrudState {
+  final Map<String, dynamic> user;
+  UserAuthenticated(this.user);
+}
 
 
 

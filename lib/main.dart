@@ -1,4 +1,5 @@
 import 'package:final_exam_app/presentation/screens/signin_screen.dart';
+import 'package:final_exam_app/presentation/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         //colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Signinscreen(),
+      home: Signupscreen(),
     );
   }
 }

@@ -1,8 +1,10 @@
 import 'package:final_exam_app/Bloc/crud_bloc.dart';
 import 'package:final_exam_app/presentation/screens/home_screen.dart';
+import 'package:final_exam_app/presentation/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Signinscreen extends StatelessWidget {
   @override
@@ -52,9 +54,54 @@ class Signin extends StatelessWidget {
               Padding(
                 padding:  EdgeInsets.only(top: 50.h),
                 child: ElevatedButton(onPressed: () {
-                  context.read<CrudBloc>().add(compareuser(name.text,email.text));
+                  // try{
+                  //   context.read<CrudBloc>().add(compareuser(name.text,email.text));
+                  //   () ?
+                  //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen(),)): Fluttertoast.showToast(
+                  //     msg: "Error: fill the signup form",
+                  //     toastLength: Toast.LENGTH_SHORT,
+                  //     gravity: ToastGravity.BOTTOM,
+                  //   );;
+                  // } catch (e){
+                  //   Fluttertoast.showToast(
+                  //     msg: "Error: $e",
+                  //     toastLength: Toast.LENGTH_SHORT,
+                  //     gravity: ToastGravity.BOTTOM,
+                  //   );
+                  // }
+
+                  try {
+                    context.read<CrudBloc>().add(compareuser(name.text, email.text));
+                    if (state is UserLoaded) {
+                      // Assuming `compareuser` modifies state to UserLoaded with results
+                      if (state.Users.isNotEmpty) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: "Error: User not found. Please fill the sign-up form.",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                        );
+                      }
+                    }
+                  } catch (e) {
+                    Fluttertoast.showToast(
+                      msg: "Error: $e",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                    );
+                  }
+                  if (state is UserAuthenticated) {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+                  }
+
                 }, child: Text('Signin')),
-              )
+              ),
+              TextButton(onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Signupscreen(),));
+              }, child: Text('New to App signup'))
             ],
           );
         }
