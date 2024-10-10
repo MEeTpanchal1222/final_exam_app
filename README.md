@@ -27,6 +27,10 @@ Here are some visual representations of the project:
 <img src="https://github.com/user-attachments/assets/79bcfd56-11d0-4746-8a3f-8cbc191058b5"  alt="slash screen" width="200"/>
 <img src="https://github.com/user-attachments/assets/68762181-84de-4b4a-9771-b7aba7795e83" alt="Splash screen" width="700" height="400"/>
 
+## Video 🎥
+[final_exam_video.webm](https://github.com/user-attachments/assets/02c22146-7397-4374-aafe-e035d538359f)
+
+
 
 ## Contributing 🤝
 If you want to contribute, please feel free to submit a pull request or open an issue.
