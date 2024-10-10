@@ -28,6 +28,7 @@ Here are some visual representations of the project:
 <img src="https://github.com/user-attachments/assets/68762181-84de-4b4a-9771-b7aba7795e83" alt="Splash screen" width="700" height="400"/>
 
 ## Video 🎥
+
 [final_exam_video.webm](https://github.com/user-attachments/assets/02c22146-7397-4374-aafe-e035d538359f)
 
 
