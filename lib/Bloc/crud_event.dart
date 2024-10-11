@@ -22,6 +22,11 @@ class Deleteuser extends CrudEvent {
   final int id;
   Deleteuser(this.id);
 }
+class Updateuser extends CrudEvent {
+  final int id;
+  final Map<String, dynamic> users;
+  Updateuser(this.id,this.users);
+}
 
 class Getfavoriteuser extends CrudEvent {
   Getfavoriteuser();
@@ -34,6 +39,6 @@ class addfavoriteuser extends CrudEvent {
 }
 
 class Deleatefavoriteuser extends CrudEvent {
-  final String id;
-  Deleatefavoriteuser(this.id);
+  final String id1;
+  Deleatefavoriteuser(this.id1);
 }

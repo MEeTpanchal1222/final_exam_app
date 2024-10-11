@@ -13,6 +13,8 @@ class CrudBloc extends Bloc<CrudEvent, CrudState> {
   final FirebaseFirestore  _favorite = FirebaseFirestore.instance;
 
   CrudBloc() : super(UserLoaded([])) {
+
+
     on<Loaduser>((event, emit) async {
       List<Map<String, dynamic>> users = await _dbService.getuser();
       emit(UserLoaded(users));
@@ -30,28 +32,18 @@ class CrudBloc extends Bloc<CrudEvent, CrudState> {
       emit(UserLoaded(users));
     });
 
-    // on<Getfavoriteuser>((event, emit){
-    //
-    // });
-    //
-    // on<addfavoriteuser>((event, emit){
-    //
-    // });
-    //
-    // on<Deleatefavoriteuser>((event, emit){
-    //
-    // });
+    on<Updateuser>((event, emit) async {
+      await _dbService.updateuser(event.id,event.users);
+      List<Map<String, dynamic>> users = await _dbService.getuser();
+      emit(UserLoaded(users));
+    });
 
-    // on<compareuser>((event, emit) async {
-    //    await _dbService.compareuser(name: event.name,email: event.Email);
-    //  List<Map<String, dynamic>> users = await _dbService.getuser();
-    //  emit(UserLoaded(users));
-    //
-    // });
+
+
     on<compareuser>((event, emit) async {
       try {
         List<Map<String, dynamic>> users = await _dbService.getuser();
-        // Check if a user with the same name and email exists
+
         final matchingUser = users.firstWhere(
               (user) => user['name'] == event.name && user['email'] == event.Email,
         );
@@ -59,39 +51,66 @@ class CrudBloc extends Bloc<CrudEvent, CrudState> {
         if (matchingUser != null) {
           emit(UserAuthenticated(matchingUser));
         } else {
-          emit(UserLoaded(users));  // Keep the same state if no match found
+          emit(UserLoaded(users));
         }
       } catch (e) {
-        emit(UserError("Error: $e"));
+
+          emit(UserError("Error: User not find , go to signup"));
       }
     });
 
 
+    // on<Getfavoriteuser>((event, emit) async {
+    //   try {
+    //     QuerySnapshot<Map<String, dynamic>> snapshot = await _favorite.collection('favorite_collection').get();
+    //     List<Map<String, dynamic>> favorites = snapshot.docs.map((doc) => doc.data()).toList();
+    //     emit(UserLoaded(favorites));
+    //   } catch (e) {
+    //     emit(UserError(e.toString()));
+    //   }
+    // });
     on<Getfavoriteuser>((event, emit) async {
       try {
-        QuerySnapshot<Map<String, dynamic>> snapshot = await _favorite.collection('favorites').get();
-        List<Map<String, dynamic>> favorites = snapshot.docs.map((doc) => doc.data()).toList();
+        QuerySnapshot<Map<String, dynamic>> snapshot = await _favorite.collection('favorite_collection').get();
+
+
+        List<Map<String, dynamic>> favorites = snapshot.docs.map((doc) {
+          Map<String, dynamic> data = doc.data();
+          data['id'] = doc.id;
+          return data;
+        }).toList();
+
         emit(UserLoaded(favorites));
       } catch (e) {
         emit(UserError(e.toString()));
       }
     });
 
+
     on<addfavoriteuser>((event, emit) async {
       try {
-        await _favorite.collection('favorites').add({'name': event.name, 'email': event.email});
+        await _favorite.collection('favorite_collection').add({'name': event.name, 'email': event.email});
         List<Map<String, dynamic>> users = await _dbService.getuser();
         emit(UserLoaded(users));
       } catch (e) {
-        emit(UserError(e.toString()));
+        SnackBar(content: Text('somthing is wrong ,and no internet'));
+        //emit(UserError(e.toString()));
       }
     });
 
     on<Deleatefavoriteuser>((event, emit) async {
       try {
-        await _favorite.collection('favorites').doc(event.id).delete();
-        List<Map<String, dynamic>> users = await _dbService.getuser();
-        emit(UserLoaded(users));
+        await _favorite.collection('favorite_collection').doc(event.id1).delete();
+        QuerySnapshot<Map<String, dynamic>> snapshot = await _favorite.collection('favorite_collection').get();
+
+
+        List<Map<String, dynamic>> favorites = snapshot.docs.map((doc) {
+          Map<String, dynamic> data = doc.data();
+          data['id'] = doc.id;
+          return data;
+        }).toList();
+
+        emit(UserLoaded(favorites));
       } catch (e) {
         emit(UserError(e.toString()));
       }

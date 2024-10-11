@@ -17,6 +17,7 @@ class SQLiteService {
 
   Future<Database> _initDB() async {
     String path = join(await getDatabasesPath(), 'local_database.db');
+    print("Database path: $path");  // Debug the path
     return openDatabase(
       path,
       version: 1,
@@ -25,6 +26,7 @@ class SQLiteService {
   }
 
   Future<void> _onCreate(Database db, int version) async {
+    print("Creating users table");  // Debug table creation
     await db.execute('''
       CREATE TABLE users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,6 +34,11 @@ class SQLiteService {
         email TEXT
       )
     ''');
+  }
+
+  Future<void> deleteDatabase(String path) async {
+    String path = join(await getDatabasesPath(), 'local_database.db');
+    await deleteDatabase(path);  // Delete the database to start fresh
   }
 
   Future<int> adduser(Map<String, dynamic> users) async {
@@ -54,10 +61,4 @@ class SQLiteService {
     return await db.delete('users', where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<List<Map<String, Object?>>> compareuser({required String name,email}) async {
-    final db = await database;
-    return await
-    //db.query('users', columns: ['name','email'], where: '"name" = ?, "email" = ?', whereArgs:[name,email]);
-    db.query('SELECT name, email FROM users WHERE "name" = ? AND "email" = ?', whereArgs:[name,email]);
-  }
 }

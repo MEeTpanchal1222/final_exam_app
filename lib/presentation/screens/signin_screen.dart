@@ -12,7 +12,7 @@ class Signinscreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Authentication App')),
       body: BlocProvider(
-        create: (context) => CrudBloc(),
+        create: (context) => CrudBloc()..add(Loaduser()),
         child: Signin(),
       ),
 
@@ -28,7 +28,18 @@ class Signin extends StatelessWidget {
 
     return BlocBuilder<CrudBloc, CrudState>(
       builder: (context, state) {
-        if (state is UserLoaded) {
+        if (state is UserAuthenticated) {
+          // Navigate to HomeScreen when the user is authenticated
+          Future.delayed(Duration.zero, () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+          });
+        } else if (state is UserError) {
+          Fluttertoast.showToast(
+            msg: state.error,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+          );
+        }
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,47 +65,16 @@ class Signin extends StatelessWidget {
               Padding(
                 padding:  EdgeInsets.only(top: 50.h),
                 child: ElevatedButton(onPressed: () {
-                  // try{
-                  //   context.read<CrudBloc>().add(compareuser(name.text,email.text));
-                  //   () ?
-                  //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen(),)): Fluttertoast.showToast(
-                  //     msg: "Error: fill the signup form",
-                  //     toastLength: Toast.LENGTH_SHORT,
-                  //     gravity: ToastGravity.BOTTOM,
-                  //   );;
-                  // } catch (e){
-                  //   Fluttertoast.showToast(
-                  //     msg: "Error: $e",
-                  //     toastLength: Toast.LENGTH_SHORT,
-                  //     gravity: ToastGravity.BOTTOM,
-                  //   );
-                  // }
-
                   try {
                     context.read<CrudBloc>().add(compareuser(name.text, email.text));
-                    if (state is UserLoaded) {
-                      // Assuming `compareuser` modifies state to UserLoaded with results
-                      if (state.Users.isNotEmpty) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => HomeScreen()),
-                        );
-                      } else {
-                        Fluttertoast.showToast(
-                          msg: "Error: User not found. Please fill the sign-up form.",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                        );
-                      }
-                    }
                   } catch (e) {
-                    Fluttertoast.showToast(
-                      msg: "Error: $e",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                    );
-                  }
-                  if (state is UserAuthenticated) {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+                    if(e == 'Bad state:No element') {
+                      Fluttertoast.showToast(
+                        msg: "Error: No User found ,Go to Signup",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                      );
+                    }
                   }
 
                 }, child: Text('Signin')),
@@ -104,8 +84,6 @@ class Signin extends StatelessWidget {
               }, child: Text('New to App signup'))
             ],
           );
-        }
-        return Center(child: CircularProgressIndicator());
       },
     );
   }
